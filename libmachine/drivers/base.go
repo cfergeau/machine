@@ -26,6 +26,7 @@ type BaseDriver struct {
 type VMDriver struct {
 	*BaseDriver
 	DiskPathURL string
+	ImageFormat string
 	Memory      int
 	CPU         int
 }
