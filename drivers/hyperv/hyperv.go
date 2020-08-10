@@ -13,7 +13,6 @@ import (
 
 type Driver struct {
 	*drivers.VMDriver
-	CrcDiskCopier        CRCDiskCopier
 	VirtualSwitch        string
 	DiskPath             string
 	MacAddress           string
@@ -29,7 +28,6 @@ const (
 // NewDriver creates a new Hyper-v driver with default settings.
 func NewDriver(hostName, storePath string) *Driver {
 	return &Driver{
-		CrcDiskCopier:        NewCRCDiskCopier(),
 		DisableDynamicMemory: defaultDisableDynamicMemory,
 		VMDriver: &drivers.VMDriver{
 			BaseDriver: &drivers.BaseDriver{
@@ -169,7 +167,7 @@ func (d *Driver) PreCreateCheck() error {
 }
 
 func (d *Driver) Create() error {
-	if err := d.CrcDiskCopier.CopyDiskToMachineDir(d.StorePath, d.MachineName, d.DiskPathURL); err != nil {
+	if err := mcnutils.CopyFile(d.DiskPathURL, d.ResolveStorePath("crc.vhdx")); err != nil {
 		return err
 	}
 
